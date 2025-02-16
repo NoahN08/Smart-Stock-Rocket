@@ -19,12 +19,17 @@ app.secret_key = 'supersecretkey'
 @app.route('/')
 def home():
     chat_history = session.get('chat_history', [])
-    return render_template('index.html', chat_history=chat_history)
+    return render_template('home.html', chat_history=chat_history)
 
-@app.route('/budget')
+@app.route('/budget', methods=['GET', 'POST'])
 def budget():
-    budget = session.get('budget', None)
-    return render_template('budget.html', budget=budget)
+    if request.method == 'GET':
+        budget = session.get('budget', None)
+        return render_template('budget.html', budget=budget)
+    elif request.method == 'POST':
+        f = request.files['file']
+        print(f.read(1024))
+        return "received " + f.filename
 
 @app.route('/literacy')
 def literacy():
@@ -44,6 +49,7 @@ def save_budget():
     session['budget'] = budget
     return redirect(url_for('home'))
 
+# Chat route - handles the conversation with the LLM
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.json['message']
