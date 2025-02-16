@@ -101,6 +101,7 @@ Use simple, everyday language as if explaining to a friend with no financial bac
 
 @app.route('/')
 def home():
+<<<<<<< HEAD
     news_items = []
     articles = get_financial_news()
 
@@ -121,9 +122,8 @@ def home():
 
     return render_template('index.html', news_items=news_items)
 
-@app.route('/budget')
+@app.route('/budget', methods=['GET', 'POST'])
 def budget():
-    # Mock budget data
     budget = session.get('budget', None)
     return render_template('budget.html', budget=budget)
 
@@ -149,6 +149,17 @@ def literacy():
 def account():
     return render_template('account.html')
 
+@app.route('/save_budget', methods=['POST'])
+def save_budget():
+    budget = {
+        'income': float(request.form['income']),
+        'savings_goal': float(request.form['savings_goal']),
+        'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+    session['budget'] = budget
+    return redirect(url_for('home'))
+
+# Chat route - handles the conversation with the LLM
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.json.get('message', '')

@@ -20,6 +20,10 @@
                 <p>Savings Goal: ${{ budget.savings_goal }}</p>
             </div>
             {% endif %}
+            <form action = "/budget" method = "post" enctype="multipart/form-data">   
+                <input type="file" name="file" />   
+                <input type = "submit" value="Upload">   
+            </form>
         </section>
     </div>
 {% endblock %}
