@@ -1,19 +1,3 @@
-h2 {
-    width: 100%;
-}
-
-title {
-    margin: 5px;
-    width: 100%;
-}
-
-content {
-    margin: 5px;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
 
 body {
     height: 125vh;
@@ -46,4 +30,93 @@ header li {
 header li a {
     color: black;
     text-decoration: none;
+}
+
+.dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.budget-section, .ai-advisor {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.budget-form form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.budget-form input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.chat-interface {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+#chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #f8f9fa;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.message.user {
+    background: #007bff;
+    color: white;
+    align-self: flex-end;
+}
+
+.message.assistant {
+    background: #e9ecef;
+    color: black;
+    align-self: flex-start;
+}
+
+#chat-form {
+    display: flex;
+    gap: 10px;
+}
+
+#user-message {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
