@@ -1,0 +1,25 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Your Budget{% endblock %}
+
+{% block content %}
+    <div class="dashboard">
+        <section class="budget-section">
+            <h2>Your Budget Overview</h2>
+            <div class="budget-form">
+                <form action="{{ url_for('save_budget') }}" method="post">
+                    <input type="number" name="income" placeholder="Monthly Income" required>
+                    <input type="number" name="savings_goal" placeholder="Savings Goal" required>
+                    <button type="submit">Update Budget</button>
+                </form>
+            </div>
+            {% if budget %}
+            <div class="budget-display">
+                <p>Monthly Income: ${{ budget.income }}</p>
+                <p>Savings Goal: ${{ budget.savings_goal }}</p>
+            </div>
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}
