@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %} {% endblock %} - Smart Stock Rocket</title>
+    <title>{% block title %}Smart Stock Rocket{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -16,8 +16,29 @@
             </ul>
         </nav>
     </header>
+
     <div class="content">
-        {% block content %} {% endblock %}
+        {% block content %}{% endblock %}
     </div>
+
+
+    <button id="ai-button">💬</button>
+
+    <div id="chat-container">
+        <div id="chat-header">AI Assistant <button id="close-btn">X</button></div>
+        <div id="chat-body"></div>
+        <div id="chat-input">
+            <input type="text" id="chat-text" placeholder="Ask me something...">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+    <script>
+    window.addEventListener("beforeunload", function () {
+        fetch("/clear_session", { method: "POST" });
+    });
+    </script>
+
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
