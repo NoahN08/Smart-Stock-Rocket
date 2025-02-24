@@ -63,6 +63,22 @@ header li a {
     border-radius: 4px;
 }
 
+.budget-display {
+
+}
+
+.budget-display table {
+    border: 1px solid;
+    border-collapse: collapse;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.budget-display th, td {
+    border: 1px solid;
+    padding: 5px;
+}
+
 button {
     background-color: #007bff;
     color: white;
