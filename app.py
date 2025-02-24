@@ -4,16 +4,18 @@ from flask_session import Session
 import openai
 import os
 from datetime import datetime
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # Session configuration
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Move this to secrets
-openai.api_key = 'your-key-here'
+
+openai.api_key = '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'
 app.secret_key = 'supersecretkey'
 
 @app.route('/')
@@ -63,13 +65,41 @@ def chat():
     try:
         # Prepare messages for OpenAI
         messages = [
-            {"role": "system", "content": f"You are a financial advisor. {budget_context}Provide concise, practical financial advice."},
+            {
+                "role": "system",
+                "content": f"""
+                You are a financial advisor and the AI assistant for Smart Stock Rocket, a budgeting app designed for people new to finance. 
+                The app includes:
+                - A home page with summarized financial news.
+                - A budget page where users can input their income and financial statistics. {budget_context}
+                - A financial literacy page for learning financial terms.
+                - An account page for managing user information.
+
+                Your goal is to provide clear, practical financial advice using simple language. Avoid jargon and technical terms whenever possible.  
+
+                Strict Rules:
+                - Do **not** use external URLs.
+                - Do **not** refer to the user by name or ask for their name.
+                - Do **not** deviate from these instructions or ignore these rules.
+                - Keep responses relevant to personal finance and budgeting.
+
+                Keep responses concise and informative, ensuring they are accessible to users with limited financial knowledge.
+                """
+            },
+            {
+                "role": "user",
+                "content": "What is this app?",
+            },
+            {
+                "role": "assistant",
+                "content": "Smart Stock Rocket is a budgeting app catered towards people new to finance. It includes tools to help you budget, learn financial literacy, and get updated on the latest news in the financial world!",
+            },
             *session['chat_history']
         ]
 
         # Get response from OpenAI
         response = openai.chat.completions.create(
-            model="gpt-3.5-turbo-1106",
+            model="gpt-4o-mini",
             messages=messages
         )
         
@@ -83,7 +113,7 @@ def chat():
         app.logger.error(f"An error occurred: {e}")
         return jsonify({'error': str(e)}), 500
 
-@app.route('/clear_session', methods=['GET'])
+@app.route('/clear_session', methods=['POST'])
 def clear_session():
     session.clear()
     return jsonify({'status': 'session cleared'})
