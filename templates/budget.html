@@ -8,22 +8,21 @@
         <section class="budget-section">
             <h2>Your Budget Overview</h2>
             <div class="budget-form">
-                <form action="{{ url_for('save_budget') }}" method="post">
-                    <input type="number" name="income" placeholder="Monthly Income" required>
-                    <input type="number" name="savings_goal" placeholder="Savings Goal" required>
+                <form onsubmit="sendBudgetInfo(event)" id="budget-form">
+                    <input type="number" name="income" placeholder="Monthly Income" id="income" required>
+                    <input type="number" name="savings_goal" placeholder="Savings Goal" id="savings-goal" required>
                     <button type="submit">Update Budget</button>
                 </form>
             </div>
-            {% if budget %}
-            <div class="budget-display">
-                <p>Monthly Income: ${{ budget.income }}</p>
-                <p>Savings Goal: ${{ budget.savings_goal }}</p>
-            </div>
-            {% endif %}
+            <div class="budget-display" id="budget-container">
+        </section>
+        <section class="ai-advisor">
+            <h2>Personalized Financial Report</h2>
             <form action = "/budget" method = "post" enctype="multipart/form-data">   
                 <input type="file" name="file" />   
                 <input type = "submit" value="Upload">   
             </form>
         </section>
     </div>
+    <script src="{{ url_for('static', filename='budget.js') }}"></script>
 {% endblock %}

@@ -101,7 +101,6 @@ Use simple, everyday language as if explaining to a friend with no financial bac
 
 @app.route('/')
 def home():
-<<<<<<< HEAD
     news_items = []
     articles = get_financial_news()
 
@@ -149,15 +148,47 @@ def literacy():
 def account():
     return render_template('account.html')
 
-@app.route('/save_budget', methods=['POST'])
-def save_budget():
-    budget = {
-        'income': float(request.form['income']),
-        'savings_goal': float(request.form['savings_goal']),
-        'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
+@app.route('/generate_budget', methods=['POST'])
+def generate_budget():
+    budget = {}
+
+    # Convert strings in form request into floats where applicable
+    for (key, value) in request.json.items():
+        try:
+            budget[key] = float(value)
+        except ValueError:
+            budget[key] = value  # Keep original value if conversion fails
+
+    budget['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     session['budget'] = budget
-    return redirect(url_for('home'))
+    
+    # Prepare the context from user's budget if available
+    budget_context = ""
+    budget_context = f"User's monthly income: ${budget['income']}, Savings goal: ${budget['savings_goal']}. "
+
+    with open('topic_prompts/budget_prompt.txt', 'r') as file:
+        budget_prompt = file.read()
+
+    try:
+        # Prepare messages for OpenAI
+        messages = [
+            {"role": "system", "content": budget_prompt},
+            {"role": "system", "content": budget_context}
+        ]
+
+        # Get response from OpenAI
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo-1106",
+            messages=messages,
+            response_format={"type": "json_object"}
+        )
+        
+        ai_response = response.choices[0].message.content
+        
+        return jsonify({'response': ai_response})
+    except Exception as e:
+        app.logger.error(f"An error occurred: {e}")
+        return jsonify({'error': str(e)}), 500
 
 # Chat route - handles the conversation with the LLM
 @app.route('/chat', methods=['POST'])
