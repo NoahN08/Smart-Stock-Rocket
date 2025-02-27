@@ -1,14 +1,12 @@
-/* General Page Styling */
 body {
-    height: 100vh; /* Prevents unnecessary scroll */
+    height: 100vh; 
     background-size: cover;
     font-family: sans-serif;
     margin-top: 80px;
     padding: 30px;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
+    overflow-x: hidden; 
 }
 
-/* Header Styling */
 header {
     background-color: white;
     position: fixed;
@@ -20,7 +18,7 @@ header {
     align-items: center;
     border-bottom: 2px solid #ddd;
     padding: 0 20px;
-    z-index: 1000; /* Keeps header on top */
+    z-index: 1000; 
 }
 
 header * {
@@ -49,7 +47,7 @@ header li a:hover {
     color: #007bff;
 }
 
-/* AI Button (Bottom Right) */
+
 #ai-button {
     position: fixed;
     bottom: 20px;
@@ -75,7 +73,7 @@ header li a:hover {
     transform: scale(1.1);
 }
 
-/* Chat Box */
+
 #chat-container {
     display: none;
     position: fixed;
@@ -94,7 +92,7 @@ header li a:hover {
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Fix visibility toggle */
+
 #chat-container.chat-visible {
     display: flex !important;
     opacity: 1 !important;
@@ -102,7 +100,7 @@ header li a:hover {
     visibility:visible !important;
 }
 
-/* Chat Header */
+
 #chat-header {
     display: flex;
     justify-content: space-between;
@@ -114,7 +112,7 @@ header li a:hover {
     font-weight: bold;
 }
 
-/* Close Button */
+
 #close-btn {
     background: none;
     border: none;
@@ -128,16 +126,16 @@ header li a:hover {
     color: #ddd;
 }
 
-/* Chat Body */
+
 #chat-body {
     flex-grow: 1;
     overflow-y: auto;
     padding: 10px;
     background: #f8f9fa;
-    max-height: 320px; /* Prevents excessive growth */
+    max-height: 320px; 
 }
 
-/* Messages */
+
 .message {
     padding: 8px;
     border-radius: 6px;
@@ -159,7 +157,7 @@ header li a:hover {
     align-self: flex-start;
 }
 
-/* Chat Footer */
+
 #chat-footer {
     display: flex;
     padding: 10px;
@@ -169,7 +167,7 @@ header li a:hover {
     min-height: 50px;
 }
 
-/* Chat Input */
+
 #chat-text {
     flex-grow: 1;
     padding: 8px;
@@ -185,7 +183,7 @@ header li a:hover {
     border-color: #007bff;
 }
 
-/* Send Button */
+
 #send-btn {
     background-color: #007bff;
     color: white;
@@ -201,7 +199,7 @@ header li a:hover {
     background-color: #0056b3;
 }
 
-/* Responsive Adjustments */
+
 @media (max-width: 768px) {
     #chat-container {
         width: 90%;
