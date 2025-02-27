@@ -6,7 +6,7 @@ import os
 from datetime import datetime
 from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)
 
 # Session configuration
@@ -15,7 +15,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 
-openai.api_key = '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'
+openai.api_key = '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'
 app.secret_key = 'supersecretkey'
 
 @app.route('/')
