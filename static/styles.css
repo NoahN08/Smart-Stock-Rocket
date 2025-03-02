@@ -2,13 +2,14 @@
 body {
     height: 125vh;
     background-size: cover;
-    font-family: sans-serif;
+    font-family: "Lato", sans-serif;
     margin-top: 80px;
     padding: 30px;
+    background-color: #DAE7DC;
 }
 
 header {
-    background-color: white;
+    background-color: #C1D7C5;
     position: fixed;
     top: 0;
     left: 0;
@@ -16,6 +17,7 @@ header {
     height: 80px;
     display: flex;
     align-items: center;
+    justify-content: center;
     border-bottom: solid;
 }
 
@@ -43,44 +45,8 @@ header li a {
     margin-bottom: 40px;
 }
 
-.budget-section, .ai-advisor {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.budget-form form {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.budget-form input {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.budget-display {
-
-}
-
-.budget-display table {
-    border: 1px solid;
-    border-collapse: collapse;
-    padding: 5px;
-    margin-bottom: 10px;
-}
-
-.budget-display th, td {
-    border: 1px solid;
-    padding: 5px;
-}
-
 button {
-    background-color: #007bff;
+    background-color: #293BE0;
     color: white;
     border: none;
     padding: 8px 16px;

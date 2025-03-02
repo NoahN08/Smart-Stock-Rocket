@@ -1,5 +1,9 @@
 
 {% extends 'base.html' %}
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='budget.css') }}">
+{% endblock %}
 
 {% block title %}Your Budget{% endblock %}
 
@@ -7,16 +11,44 @@
     <div class="dashboard">
         <section class="budget-section">
             <h2>Your Budget Overview</h2>
-            <div class="budget-form">
-                <form onsubmit="sendBudgetInfo(event)" id="budget-form">
-                    <input type="number" name="income" placeholder="Monthly Income" id="income" required>
-                    <input type="number" name="savings_goal" placeholder="Savings Goal" id="savings-goal" required>
-                    <button type="submit">Update Budget</button>
-                </form>
-            </div>
-            <div class="budget-display" id="budget-container">
+            <form class="budget-form" onsubmit="sendBudgetInfo(event)" id="budget-form">
+                <div class="input-container">
+                    <table class="input-table" id="income-input-table">
+                        <td>
+                            <input type="text" name="income_type" placeholder="Type of Income">
+                            <input type="number" name="monthly_income" placeholder="Monthly Income" required>
+                            <button type="button" onclick="deleteInputRow(event)"> &#x2715; </button>
+                        </td>
+                        <td>
+                            <button type="button"> + </button>
+                        </td>
+                    </table>
+                    <table class="input-table" id="expense-input-table">
+                        <td>
+                            <input type="text" name="expense_type" placeholder="Type of Expense">
+                            <input type="number" name="expense" placeholder="Expenses" required>
+                            <button type="button"> &#x2715; </button>
+                        </td>
+                        <td>
+                            <button type="button"> + </button>
+                        </td>
+                    </table>
+                    <table class="input-table" id=savings-input-table>
+                        <td>
+                            <input type="text" name="savings_type" placeholder="Type of Savings">
+                            <input type="number" name="savings_goal" placeholder="Savings Goal" required>
+                            <button type="button"> &#x2715; </button>
+                        </td>
+                        <td>
+                            <button type="button"> + </button>
+                        </td>
+                    </table>
+                </div>
+                <button type="submit">Update Budget</button>
+            </form>
+            <div class="display" id="budget-container">
         </section>
-        <section class="ai-advisor">
+        <section class="budget-section">
             <h2>Personalized Financial Report</h2>
             <form action = "/budget" method = "post" enctype="multipart/form-data">   
                 <input type="file" name="file" />   

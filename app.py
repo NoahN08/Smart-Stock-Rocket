@@ -13,7 +13,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Move this to secrets
-openai.api_key = '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'
+openai.api_key = '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'
 app.secret_key = 'supersecretkey'
 
 @app.route('/')
@@ -53,8 +53,9 @@ def generate_budget():
     session['budget'] = budget
     
     # Prepare the context from user's budget if available
-    budget_context = ""
-    budget_context = f"User's monthly income: ${budget['income']}, Savings goal: ${budget['savings_goal']}. "
+    budget_context = str(budget)
+
+    print(budget_context)
 
     with open('topic_prompts/budget_prompt.txt', 'r') as file:
         budget_prompt = file.read()
