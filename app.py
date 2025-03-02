@@ -163,8 +163,9 @@ def generate_budget():
     session['budget'] = budget
     
     # Prepare the context from user's budget if available
-    budget_context = ""
-    budget_context = f"User's monthly income: ${budget['income']}, Savings goal: ${budget['savings_goal']}. "
+    budget_context = str(budget)
+
+    print(budget_context)
 
     with open('topic_prompts/budget_prompt.txt', 'r') as file:
         budget_prompt = file.read()
