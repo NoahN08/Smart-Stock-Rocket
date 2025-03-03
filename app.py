@@ -119,7 +119,7 @@ def home():
             'timestamp': timestamp
         })
 
-    return render_template('index.html', news_items=news_items)
+    return render_template('home.html', news_items=news_items)
 
 @app.route('/budget', methods=['GET', 'POST'])
 def budget():
