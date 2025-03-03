@@ -55,6 +55,16 @@ h2 {
     cursor: pointer;
 }
 
+button {
+    background-color: #758E4F;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
 .delete-entry-row:hover {
     background-color: #A52A2A;
 }
