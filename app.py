@@ -144,6 +144,19 @@ def save_budget():
 def literacy():
     return render_template('literacy.html')
 
+@app.route('/lit_budget')
+def lit_budget():
+    return render_template('lit_budget.html')
+
+@app.route('/lit_invest')
+def lit_invest():
+    return render_template('lit_invest.html')
+
+@app.route('/lit_debt')
+def lit_debt():
+    return render_template('lit_debt.html')
+
+
 @app.route('/account')
 def account():
     return render_template('account.html')
@@ -233,3 +246,4 @@ def clear_session():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
+
