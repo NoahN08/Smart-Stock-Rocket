@@ -98,9 +98,6 @@ function calculateTotal(columnId) {
     column.querySelector(".total").textContent = `Total: $${total.toFixed(2)}`;
 }
 
-
-
-
 // Send budget info to generate_budget route
 function sendBudgetInfo(budgetData) {
 
