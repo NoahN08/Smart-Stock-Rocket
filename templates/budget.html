@@ -1,5 +1,9 @@
 
 {% extends 'base.html' %}
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='budget.css') }}">
+{% endblock %}
 
 {% block title %}Your Budget{% endblock %}
 
@@ -7,19 +11,38 @@
     <div class="dashboard">
         <section class="budget-section">
             <h2>Your Budget Overview</h2>
-            <div class="budget-form">
-                <form action="{{ url_for('save_budget') }}" method="post">
-                    <input type="number" name="income" placeholder="Monthly Income" required>
-                    <input type="number" name="savings_goal" placeholder="Savings Goal" required>
-                    <button type="submit">Update Budget</button>
-                </form>
-            </div>
-            {% if budget %}
-            <div class="budget-display">
-                <p>Monthly Income: ${{ budget.income }}</p>
-                <p>Savings Goal: ${{ budget.savings_goal }}</p>
-            </div>
-            {% endif %}
+            <form id="budget-form">
+                <div class="input-column" id="income-column">
+                    <h3>Income</h3>
+                    <div class="entries"></div>
+                    <button type="button" class="add-entry-row"> + </button>
+                    <div class="total">Total: $0</div>
+                </div>
+
+                <div class="input-column" id="expenses-column">
+                    <h3>Expenses</h3>
+                    <div class="entries"></div>
+                    <button type="button" class="add-entry-row"> + </button>
+                    <div class="total">Total: $0</div>
+                </div>
+
+                <div class="input-column" id="savings-column">
+                    <h3>Savings Goals</h3>
+                    <div class="entries"></div>
+                    <button type="button" class="add-entry-row"> + </button>
+                    <div class="total">Total: $0</div>
+                </div>
+                <button type="submit">Update Budget</button>
+            </form>
+            <div class="display" id="budget-container">
         </section>
+        <!-- <section class="budget-section">
+            <h2>Personalized Financial Report</h2>
+            <form action = "/budget" method = "post" enctype="multipart/form-data">   
+                <input type="file" name="file" />   
+                <input type = "submit" value="Upload">   
+            </form>
+        </section> -->
     </div>
+    <script src="{{ url_for('static', filename='budget.js') }}" defer></script>
 {% endblock %}
