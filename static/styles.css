@@ -235,23 +235,3 @@ footer {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
 }
-
-.budget-form {
-    margin: 20px 0;
-}
-
-.budget-form input {
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.budget-form button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-}
