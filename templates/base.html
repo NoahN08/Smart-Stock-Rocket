@@ -2,43 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Smart Stock Rocket{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <header>
         <nav>
+            <div class="logo">Smart Stock Rocket</div>
             <ul>
                 <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li><a href="{{ url_for('budget') }}">Your Budget</a></li>
+                <li><a href="{{ url_for('budget') }}">Budget</a></li>
                 <li><a href="{{ url_for('literacy') }}">Financial Literacy</a></li>
                 <li><a href="{{ url_for('account') }}">Account</a></li>
             </ul>
         </nav>
     </header>
 
-    <div class="content">
+    <main>
         {% block content %}{% endblock %}
-    </div>
+    </main>
 
+    <footer>
+        <p>&copy; 2023 Smart Stock Rocket. All rights reserved.</p>
+    </footer>
 
+    <!-- Chat UI -->
     <button id="ai-button">💬</button>
-
     <div id="chat-container">
-        <div id="chat-header">AI Assistant <button id="close-btn">X</button></div>
+        <div id="chat-header">
+            <span>Financial Assistant</span>
+            <button id="close-btn">✕</button>
+        </div>
         <div id="chat-body"></div>
         <div id="chat-footer">
-            <input type="text" id="chat-text" placeholder="Ask me something...">
+            <input type="text" id="chat-text" placeholder="Type your message...">
             <button id="send-btn">Send</button>
         </div>
     </div>
+
     <script>
     window.addEventListener("beforeunload", function () {
         fetch("/clear_session", { method: "POST" });
     });
     </script>
-
-    
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="{{ url_for('static', filename='script.js') }}?v=1.1"></script>
 </body>
 </html>
