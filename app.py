@@ -152,12 +152,7 @@ def account():
 def generate_budget():
     budget = {}
 
-    # Convert strings in form request into floats where applicable
-    for (key, value) in request.json.items():
-        try:
-            budget[key] = float(value)
-        except ValueError:
-            budget[key] = value  # Keep original value if conversion fails
+    budget = dict(request.json)
 
     budget['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     session['budget'] = budget

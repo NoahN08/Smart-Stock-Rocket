@@ -11,50 +11,38 @@
     <div class="dashboard">
         <section class="budget-section">
             <h2>Your Budget Overview</h2>
-            <form class="budget-form" onsubmit="sendBudgetInfo(event)" id="budget-form">
-                <div class="input-container">
-                    <table class="input-table" id="income-input-table">
-                        <td>
-                            <input type="text" name="income_type" placeholder="Type of Income">
-                            <input type="number" name="monthly_income" placeholder="Monthly Income" required>
-                            <button type="button" onclick="deleteInputRow(event)"> &#x2715; </button>
-                        </td>
-                        <td>
-                            <button type="button"> + </button>
-                        </td>
-                    </table>
-                    <table class="input-table" id="expense-input-table">
-                        <td>
-                            <input type="text" name="expense_type" placeholder="Type of Expense">
-                            <input type="number" name="expense" placeholder="Expenses" required>
-                            <button type="button"> &#x2715; </button>
-                        </td>
-                        <td>
-                            <button type="button"> + </button>
-                        </td>
-                    </table>
-                    <table class="input-table" id=savings-input-table>
-                        <td>
-                            <input type="text" name="savings_type" placeholder="Type of Savings">
-                            <input type="number" name="savings_goal" placeholder="Savings Goal" required>
-                            <button type="button"> &#x2715; </button>
-                        </td>
-                        <td>
-                            <button type="button"> + </button>
-                        </td>
-                    </table>
+            <form id="budget-form">
+                <div class="input-column" id="income-column">
+                    <h3>Income</h3>
+                    <div class="entries"></div>
+                    <button type="button" class="add-entry-row"> + </button>
+                    <div class="total">Total: $0</div>
+                </div>
+
+                <div class="input-column" id="expenses-column">
+                    <h3>Expenses</h3>
+                    <div class="entries"></div>
+                    <button type="button" class="add-entry-row"> + </button>
+                    <div class="total">Total: $0</div>
+                </div>
+
+                <div class="input-column" id="savings-column">
+                    <h3>Savings Goals</h3>
+                    <div class="entries"></div>
+                    <button type="button" class="add-entry-row"> + </button>
+                    <div class="total">Total: $0</div>
                 </div>
                 <button type="submit">Update Budget</button>
             </form>
             <div class="display" id="budget-container">
         </section>
-        <section class="budget-section">
+        <!-- <section class="budget-section">
             <h2>Personalized Financial Report</h2>
             <form action = "/budget" method = "post" enctype="multipart/form-data">   
                 <input type="file" name="file" />   
                 <input type = "submit" value="Upload">   
             </form>
-        </section>
+        </section> -->
     </div>
-    <script src="{{ url_for('static', filename='budget.js') }}"></script>
+    <script src="{{ url_for('static', filename='budget.js') }}" defer></script>
 {% endblock %}

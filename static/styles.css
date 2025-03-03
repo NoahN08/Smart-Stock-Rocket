@@ -1,5 +1,31 @@
 body {
     font-family: "Lato", sans-serif;
+    margin-top: 80px;
+    padding: 30px;
+    overflow-x: hidden;
+}
+
+header {
+    background-color: #A9C7AD;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    padding: 0 20px;
+    z-index: 1000; 
+}
+
+header * {
+    display: inline;
+}
+
+header ul {
+    list-style: none;
+    padding: 0;
     margin: 0;
     padding: 0;
     height: 100vh;
