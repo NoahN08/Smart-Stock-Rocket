@@ -119,11 +119,10 @@ def home():
             'timestamp': timestamp
         })
 
-    return render_template('index.html', news_items=news_items)
+    return render_template('home.html', news_items=news_items)
 
-@app.route('/budget')
+@app.route('/budget', methods=['GET', 'POST'])
 def budget():
-    # Mock budget data
     budget = session.get('budget', None)
     return render_template('budget.html', budget=budget)
 
@@ -149,6 +148,45 @@ def literacy():
 def account():
     return render_template('account.html')
 
+@app.route('/generate_budget', methods=['POST'])
+def generate_budget():
+    budget = {}
+
+    budget = dict(request.json)
+
+    budget['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    session['budget'] = budget
+    
+    # Prepare the context from user's budget if available
+    budget_context = str(budget)
+
+    print(budget_context)
+
+    with open('topic_prompts/budget_prompt.txt', 'r') as file:
+        budget_prompt = file.read()
+
+    try:
+        # Prepare messages for OpenAI
+        messages = [
+            {"role": "system", "content": budget_prompt},
+            {"role": "system", "content": budget_context}
+        ]
+
+        # Get response from OpenAI
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo-1106",
+            messages=messages,
+            response_format={"type": "json_object"}
+        )
+        
+        ai_response = response.choices[0].message.content
+        
+        return jsonify({'response': ai_response})
+    except Exception as e:
+        app.logger.error(f"An error occurred: {e}")
+        return jsonify({'error': str(e)}), 500
+
+# Chat route - handles the conversation with the LLM
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.json.get('message', '')
