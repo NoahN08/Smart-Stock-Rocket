@@ -1,104 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Account</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-        }
-        .dashboard {
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-        }
-        button {
-            margin-top: 15px;
-            padding: 10px;
-            width: 100%;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
 
+{% block title %}Account {% endblock %}
+
+{% block content %}
     <div class="dashboard">
         <section class="account-section">
             <h2>Account Settings</h2>
-            <div class="account-info">
-                <h3>Profile Information</h3>
-                <p>Manage your account settings and preferences here.</p>
-
-                <form id="account-form">
-                    <label for="first-name">First Name:</label>
-                    <input type="text" id="first-name" name="first-name" required>
-
-                    <label for="last-name">Last Name:</label>
-                    <input type="text" id="last-name" name="last-name" required>
-
-                    <label for="age">Age:</label>
-                    <input type="number" id="age" name="age" min="1" required>
-
-                    <button type="submit">Update Profile</button>
+            <div class="account-form">
+                <form action="{{ url_for('account') }}" method="post">
+                    <input type="text" name="first_name" placeholder="First Name" required>
+                    <input type="text" name="last_name" placeholder="Last Name" required>
+                    <input type="number" name="age" placeholder="Age" required>
+                    <button type="submit">Update Account</button>
                 </form>
-
-                <p id="status-message" style="color: green; display: none;">Profile updated successfully!</p>
             </div>
+            {% if account %}
+            <div class="account-display">
+                <p>First Name: {{ account.first_name }}</p>
+                <p>Last Name: {{ account.last_name }}</p>
+                <p>Age: {{ account.age }}</p>
+            </div>
+            {% endif %}
         </section>
     </div>
-
-    <script>
-        document.getElementById("account-form").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent form submission
-
-            // Collect user input
-            const firstName = document.getElementById("first-name").value;
-            const lastName = document.getElementById("last-name").value;
-            const age = document.getElementById("age").value;
-
-            // Save to local storage (simulating a backend)
-            localStorage.setItem("firstName", firstName);
-            localStorage.setItem("lastName", lastName);
-            localStorage.setItem("age", age);
-
-            // Show success message
-            document.getElementById("status-message").style.display = "block";
-        });
-
-        // Load saved data when page loads
-        window.onload = function() {
-            if (localStorage.getItem("firstName")) {
-                document.getElementById("first-name").value = localStorage.getItem("firstName");
-            }
-            if (localStorage.getItem("lastName")) {
-                document.getElementById("last-name").value = localStorage.getItem("lastName");
-            }
-            if (localStorage.getItem("age")) {
-                document.getElementById("age").value = localStorage.getItem("age");
-            }
-        };
-    </script>
-
-</body>
-</html>
+{% endblock %}
