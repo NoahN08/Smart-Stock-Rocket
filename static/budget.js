@@ -77,9 +77,28 @@ function addEntry(columnId) {
     entriesContainer.appendChild(newEntry);
 
 
+    const descriptorInput = newEntry.querySelector(".descriptor");
     const valueInput = newEntry.querySelector(".value");
+
+    // Update column total when value of one of the entries is changed
     valueInput.addEventListener("change", function() {
         calculateTotal(columnId);
+    });
+
+    // Focus event listeners
+    descriptorInput.addEventListener("focus", function() {
+        this.style.minWidth = "200px"; // Increase width on focus
+    });
+    valueInput.addEventListener("focus", function() {
+        this.style.minWidth = "200px"; // Increase width on focus
+    });
+
+    // Blur event listeners
+    descriptorInput.addEventListener("blur", function() {
+        this.style.minWidth = ""; // Restore original width on blur
+    });
+    valueInput.addEventListener("blur", function() {
+        this.style.minWidth = ""; // Restore original width on blur
     });
 };
 
@@ -155,4 +174,7 @@ function displayBudget(budget_json) {
     budgetContainer.appendChild(tableElement);
     budgetContainer.appendChild(commentsElement);
     budgetContainer.scrollTop = budgetContainer.scrollHeight;
+
+    const detailedReport = budget.DetailedReportMarkdown
+    budgetContainer.appendChild(document.createTextNode(detailedReport));
 }
