@@ -2,6 +2,7 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from flask_session import Session
 import openai
+from dotenv import load_dotenv
 import os
 from datetime import datetime
 from flask_cors import CORS
@@ -16,9 +17,11 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = False
 Session(app)
 
+load_dotenv()
+
 # Set API keys
-openai.api_key = os.environ.get('OPENAI_API_KEY', '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')
-news_api_key = os.environ.get('NEWS_API_KEY', '167b86718b6246618b4ea4048c94ba50') # Replace with actual key in environment variables
+openai.api_key = os.environ.get('OPENAI_API_KEY')
+news_api_key = os.environ.get('NEWS_API_KEY')
 
 # Initialize OpenAI client
 openai_client = openai.OpenAI()
