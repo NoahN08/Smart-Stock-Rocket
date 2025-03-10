@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
+    background-color: #DAE7DC;
     background-size: cover;
     background-position: center;
 }
@@ -12,8 +13,8 @@ header nav {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
-    background-color: #333;
-    color: white;
+    background-color: #202A25;
+    color: #DAE7DC;
 }
 
 .logo {
@@ -41,7 +42,7 @@ nav a {
 }
 
 nav a:hover {
-    background-color: #4CAF50;
+    background-color: #433E3F;
 }
 
 main {
@@ -49,8 +50,8 @@ main {
 }
 
 footer {
-    background-color: #333;
-    color: white;
+    background-color: #202A25;
+    color: #DAE7DC;
     text-align: center;
     padding: 1rem;
     position: fixed;
@@ -91,7 +92,7 @@ footer {
 .read-more {
     display: inline-block;
     margin-top: 10px;
-    color: #4CAF50;
+    color: #7392B7;
     text-decoration: none;
 }
 
@@ -103,8 +104,8 @@ footer {
 }
 
 .navigation-controls button {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #758E4F;
+    color: #DAE7DC;
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
@@ -124,13 +125,16 @@ footer {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background-color: #4CAF50;
-    color: white;
+    background-color: #7392B7;
+    color: #DAE7DC;
     border: none;
     font-size: 24px;
     cursor: pointer;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #chat-container {
@@ -161,8 +165,8 @@ footer {
 }
 
 #chat-header {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #7392B7;
+    color: #DAE7DC;
     padding: 15px;
     font-weight: bold;
     display: flex;
@@ -172,9 +176,13 @@ footer {
 #close-btn {
     background: none;
     border: none;
-    color: white;
+    color: #DAE7DC;
     cursor: pointer;
     font-weight: bold;
+    margin-left: auto;
+    padding: 0;
+    width: 20px;
+    font-size: 14px;
 }
 
 #chat-body {
@@ -195,12 +203,14 @@ footer {
 
 .chat-message.user {
     align-self: flex-end;
-    background-color: #DCF8C6;
+    background-color: #7392B7;
+    color: #DAE7DC;
 }
 
 .chat-message.assistant {
     align-self: flex-start;
-    background-color: #F1F0F0;
+    background-color: #DAE7DC;
+    color: #433E3F;
 }
 
 #chat-footer {
@@ -218,8 +228,8 @@ footer {
 }
 
 #send-btn {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #7392B7;
+    color: #DAE7DC;
     border: none;
     border-radius: 20px;
     padding: 8px 15px;
@@ -280,7 +290,7 @@ button:hover {
 }
 
 h2 {
-    color: #00796b;
+    color: #758E4F;
     margin-bottom: 30px;
     font-size: 3rem;
 }
