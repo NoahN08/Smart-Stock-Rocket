@@ -20,11 +20,11 @@ Session(app)
 load_dotenv()
 
 # Set API keys
-openai.api_key = os.environ.get('OPENAI_API_KEY')
-news_api_key = os.environ.get('NEWS_API_KEY')
+openai_api_key = os.environ.get('OPENAI_API_KEY', 'your-api-key-here')
+news_api_key = os.environ.get('NEWS_API_KEY', 'your-news-api-key-here')
 
-# Initialize OpenAI client
-openai_client = openai.OpenAI()
+# Initialize OpenAI client with API key explicitly
+openai_client = openai.OpenAI(api_key=openai_api_key)
 
 def get_financial_news():
     news_api_url = "https://newsapi.org/v2/top-headlines"
