@@ -17,9 +17,9 @@ Analyze this data and:
         * "Percentage of Income Spent on Expenses": (Calculate and display as a percentage)
         * "Percentage of Income Targeted for Savings": (Calculate and display as a percentage)
     * In the "Comments" section of your JSON output, provide:
-        * A concise analysis of the user's budget, highlighting strengths and potential areas for improvement.
-        * 2-3 specific, actionable recommendations for the user.
-        * Positive reinforcement if the budget is well-managed.
+        * A concise analysis of the user's budget, highlighting strengths and potential areas for improvement. Use complete sentences and add line breaks (\n) for readability.
+        * 2-3 specific, actionable recommendations for the user. Use complete sentences and add line breaks (\n) for readability.
+        * Positive reinforcement if the budget is well-managed. Use complete sentences and add line breaks (\n) for readability.
         * Avoid formatting this as a paragraph. Try to format it in a way that would be readable for the user. Try to separate ideas and sentences with line spaces because blocks of text are often daunting and make users lose interest.
 2.  **Generate a Detailed Analysis (Markdown Output):**
     * Create a Markdown formatted string, that includes:
