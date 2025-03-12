@@ -77,9 +77,28 @@ function addEntry(columnId) {
     entriesContainer.appendChild(newEntry);
 
 
+    const descriptorInput = newEntry.querySelector(".descriptor");
     const valueInput = newEntry.querySelector(".value");
+
+    // Update column total when value of one of the entries is changed
     valueInput.addEventListener("change", function() {
         calculateTotal(columnId);
+    });
+
+    // Focus event listeners
+    descriptorInput.addEventListener("focus", function() {
+        this.style.minWidth = "200px"; // Increase width on focus
+    });
+    valueInput.addEventListener("focus", function() {
+        this.style.minWidth = "200px"; // Increase width on focus
+    });
+
+    // Blur event listeners
+    descriptorInput.addEventListener("blur", function() {
+        this.style.minWidth = ""; // Restore original width on blur
+    });
+    valueInput.addEventListener("blur", function() {
+        this.style.minWidth = ""; // Restore original width on blur
     });
 };
 
@@ -122,37 +141,60 @@ function sendBudgetInfo(budgetData) {
 function displayBudget(budget_json) {
     budget = JSON.parse(budget_json)
     const budgetContainer = document.getElementById("budget-container");
+    budgetContainer.innerHTML = '';
 
     // Create heading
     const heading = document.createElement("h3");
     heading.textContent = "Your Budget Report";
 
-    // Generate table with number outputs
-    const tableElement = document.createElement("table");
-    const tableBody = document.createElement("tbody")
-    const tableHeaderRow = document.createElement("tr");
-    const tableValueRow = document.createElement("tr");
-    Object.entries(budget.Table).forEach(([key, value]) => {
-        const header = document.createElement("th");
-        header.appendChild(document.createTextNode(key));
-        tableHeaderRow.appendChild(header);
-        const cell = document.createElement("td");
-        cell.appendChild(document.createTextNode(value));
-        tableValueRow.appendChild(cell);
-    });
-    tableBody.appendChild(tableHeaderRow);
-    tableBody.appendChild(tableValueRow);
-    tableElement.appendChild(tableBody);
-    tableElement.classList.add("table")
+    const tableData = budget.Table;
+    const comments = budget.Comments.replace(/\n/g, '<br>');
 
-    // Create div to hold general comments/suggestions from AI
-    const commentsElement = document.createElement("div");
-    commentsElement.textContent = budget.Comments;
+    // Create the table
+    const table = document.createElement('table');
 
-    // Clear budgetContainer and add new elements
-    budgetContainer.innerHTML = '';
+    // Create the header row (keys)
+    const headerRow = table.insertRow();
+    for (const key in tableData) {
+        const headerCell = headerRow.insertCell();
+        headerCell.textContent = key;
+    }
+
+    // Create the data row (values)
+    const dataRow = table.insertRow();
+    for (const key in tableData) {
+        const dataCell = dataRow.insertCell();
+        dataCell.textContent = tableData[key];
+    }
+
+    // Display the comments
+    const commentsDiv = document.createElement('div');
+    commentsDiv.innerHTML = comments;
+
+    const detailedReport = budget.DetailedReportMarkdown
+
+    // Append the table and comments to the page
     budgetContainer.appendChild(heading);
-    budgetContainer.appendChild(tableElement);
-    budgetContainer.appendChild(commentsElement);
-    budgetContainer.scrollTop = budgetContainer.scrollHeight;
+    budgetContainer.appendChild(table);
+    budgetContainer.appendChild(commentsDiv);
+    budgetContainer.appendChild(document.createTextNode(detailedReport));
+
+    fetch('/generate_budget_pdf', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(budget) // Send the entire LLM response
+    })
+    .then(response => response.blob()) // Get the response as a blob
+    .then(blob => {
+        // Create a download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'budget_report.pdf';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url); // Clean up
+    });
 }

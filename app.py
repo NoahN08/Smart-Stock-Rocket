@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_file
 from flask_session import Session
 import openai
 from dotenv import load_dotenv
@@ -7,6 +7,9 @@ import os
 from datetime import datetime
 from flask_cors import CORS
 import requests
+import markdown
+import tempfile
+from weasyprint import HTML
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)
@@ -196,11 +199,43 @@ def generate_budget():
         )
         
         ai_response = response.choices[0].message.content
+
+        print(ai_response)
         
         return jsonify({'response': ai_response})
     except Exception as e:
         app.logger.error(f"An error occurred: {e}")
         return jsonify({'error': str(e)}), 500
+
+@app.route('/generate_budget_pdf', methods=['POST'])
+def generate_budget_pdf():
+    data = request.get_json()
+    markdown_content = data.get('DetailedReportMarkdown', '')
+
+    # Convert Markdown to HTML
+    html_content = markdown.markdown(markdown_content)
+
+    print(html_content)
+
+    # Convert HTML to PDF
+    html = HTML(string=html_content)
+    pdf_bytes = html.write_pdf()
+
+    # Create a temporary file
+    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
+    temp_file.write(pdf_bytes)
+    temp_file.close()
+
+    # Send the PDF as a download
+    return send_file(
+        temp_file.name,
+        as_attachment=True,
+        download_name='budget_report.pdf',
+        mimetype='application/pdf'
+    )
+
+    #Clean up the temp file
+    os.unlink(temp_file.name)
 
 # Chat route - handles the conversation with the LLM
 @app.route('/chat', methods=['POST'])

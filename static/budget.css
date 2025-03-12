@@ -1,12 +1,16 @@
 
 h2 {
+    color: black;
     margin: 10px 10px 20px;
+    font-size: 1.75rem;
     font-weight: 900;
 }
 
 .budget-section {
     background: white;
     border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 #budget-form {
@@ -23,6 +27,7 @@ h2 {
     width: 100px;
     flex: 1;
     box-sizing: border-box;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .input-column h3 {
@@ -31,8 +36,8 @@ h2 {
 }
 
 .entry-row {
-  display: flex; /* Make entry a flex container */
-  align-items: center; /* Vertically align items */
+  display: flex;
+  align-items: center;
   margin-bottom: 5px;
 }
 
@@ -53,6 +58,7 @@ h2 {
 }
 
 button {
+    all: revert;
     background-color: #758E4F;
     color: white;
     border: none;
@@ -79,7 +85,6 @@ button {
 }
 
 .display th, td {
-    display: flex;
     border: 1px solid;
     padding: 5px;
     text-align: center;
