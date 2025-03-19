@@ -14,7 +14,7 @@ img {vertical-align: middle;}
   max-width: 1000px;
   position: relative;
   margin: 50px auto;
-  padding-top: 300px;
+  padding-top: 100px;
 }
 
 .prev, .next {
@@ -90,11 +90,11 @@ img {vertical-align: middle;}
 </style>
 
 <div class="slideshow-container">
-  {% for i in range(1, 17) %}
+  {% for i in range(1, 16) %}
     <div class="mySlides fade">
       <div class="text">Slide {{ i }}</div>
-      <div class="numbertext">{{ i }} / 16</div>
-      <img src="/images/budget{{ i }}.png" style="width:100%">
+      <div class="numbertext">{{ i }} / 15</div>
+      <img src="/static/images/budget{{i}}.png" style="width:100%">
       
     </div>
   {% endfor %}
