@@ -163,7 +163,7 @@ def lit_debt():
     return render_template('lit_debt.html')
 
 
-@app.route('/account')
+@app.route('/account', methods=['GET', 'POST'])
 def account():
     return render_template('account.html')
 
@@ -213,9 +213,21 @@ def generate_budget_pdf():
     markdown_content = data.get('DetailedReportMarkdown', '')
 
     # Convert Markdown to HTML
-    html_content = markdown.markdown(markdown_content)
+    html_content = markdown.markdown(markdown_content, extensions=['tables'])
 
-    print(html_content)
+    # Add CSS for table styling
+    css = """
+    <style>
+    table {
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 4px;
+    }
+    </style>
+    """
+    html_content = css + html_content
 
     # Convert HTML to PDF
     html = HTML(string=html_content)
@@ -255,8 +267,7 @@ def chat():
     budget_context = ""
     if 'budget' in session:
         budget = session['budget']
-        budget_context = f"User's monthly income: ${budget['income']}, Savings goal: ${budget['savings_goal']}. "
-    
+        
     try:
         # Prepare messages for OpenAI
         messages = [

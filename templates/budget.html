@@ -33,7 +33,15 @@
             </div>
             <button type="submit">Update Budget</button>
         </form>
-        <div class="display" id="budget-container">
+
+        <div id="loading-overlay" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Generating Budget Report...</p>
+        </div>
+
+        <div class="display" id="budget-container"> </div>
+        
+        <button id="download-pdf-button" style="display: none;">Download Detailed PDF Report</button>
     </section>
     <!-- <section class="budget-section">
         <h2>Personalized Financial Report</h2>

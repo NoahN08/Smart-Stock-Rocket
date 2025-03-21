@@ -119,6 +119,9 @@ function calculateTotal(columnId) {
 
 // Send budget info to generate_budget route
 function sendBudgetInfo(budgetData) {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const downloadButton = document.getElementById('download-pdf-button');
+    loadingOverlay.style.display = 'flex'; // Show loading indicator
 
     // Call API route to generate budget
     fetch('/generate_budget', {
@@ -131,9 +134,13 @@ function sendBudgetInfo(budgetData) {
     .then(response => response.json())
     .then(data => {
         displayBudget(data.response);
+        loadingOverlay.style.display = 'none'; // Hide loading indicator
+        downloadButton.style.display = 'block'; // Show download button
     })
     .catch((error) => {
         console.error('Error:', error);
+        loadingOverlay.style.display = 'none'; // Hide loading indicator on error
+        downloadButton.style.display = 'none'; // hide the download button, if it was somehow visible.
     });
 }
 
@@ -157,6 +164,7 @@ function displayBudget(budget_json) {
     const headerRow = table.insertRow();
     for (const key in tableData) {
         const headerCell = headerRow.insertCell();
+        headerCell.style.backgroundColor = "lightgray";
         headerCell.textContent = key;
     }
 
@@ -177,8 +185,11 @@ function displayBudget(budget_json) {
     budgetContainer.appendChild(heading);
     budgetContainer.appendChild(table);
     budgetContainer.appendChild(commentsDiv);
-    budgetContainer.appendChild(document.createTextNode(detailedReport));
+}
 
+const downloadButton = document.getElementById('download-pdf-button');
+downloadButton.addEventListener('click', function() {
+    downloadButton.disabled = true; // Disable the button
     fetch('/generate_budget_pdf', {
         method: 'POST',
         headers: {
@@ -188,13 +199,26 @@ function displayBudget(budget_json) {
     })
     .then(response => response.blob()) // Get the response as a blob
     .then(blob => {
+        // Remove any existing download links
+        const existingLink = document.querySelector('#download-link');
+        if (existingLink) {
+            existingLink.remove();
+        }
+
         // Create a download link
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         a.download = 'budget_report.pdf';
+        a.id = 'download-link'; // Assign an ID for removal
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url); // Clean up
+
+        downloadButton.disabled = false; // re-enable button.
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        downloadButton.disabled = false; // re-enable button.
     });
-}
+});
