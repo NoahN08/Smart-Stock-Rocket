@@ -82,6 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
     
     // Add initial welcome message
     setTimeout(() => {
-        addMessageToChat("assistant", "Hi there! I'm your Smart Stock Rocket assistant. How can I help you with financial planning today?");
+        addMessageToChat("assistant", "Hi there! I'm your Smart Saver assistant. How can I help you with financial planning today?");
     }, 500);
 });
