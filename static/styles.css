@@ -266,7 +266,7 @@ button {
     cursor: pointer;
     font-size: 1.5rem;
     font-weight: bold;
-    color: white;
+    color: #758e4f;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
