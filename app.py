@@ -266,7 +266,7 @@ def chat():
     # Prepare the context from user's budget if available
     budget_context = ""
     if 'budget' in session:
-        budget = session['budget']
+        budget_context = session['budget']
         
     try:
         # Prepare messages for OpenAI
