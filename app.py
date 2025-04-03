@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_file
 from flask_session import Session
 import openai
@@ -10,6 +9,7 @@ import requests
 import markdown
 import tempfile
 from weasyprint import HTML
+import re  # Added for regex processing
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)
@@ -72,35 +72,50 @@ def get_financial_news():
 def summarize_news(article):
     try:
         prompt = f"""Summarize this financial news article in an easy-to-read format:
-Title: {article['title']}
-Content: {article['description']}
+        Title: {article['title']}
+        Content: {article['description']}
 
-Please structure the summary in the following sections:
+        Please structure the summary in the following sections. Each section should be around 50 words:
 
-1. Main Event (50 words):
-[Explain the key announcement or event in simple terms]
+        1. Main Event:
+        [Explain the key announcement or event in simple terms]
 
-2. Key Players (50 words):
-[Describe the main companies/people involved and their roles]
+        2. Key Players:
+        [Describe the main companies/people involved and their roles]
 
-3. Impact on Daily Life (50 words):
-[Explain how this affects regular people, prices, or jobs]
+        3. Impact on Daily Life:
+        [Explain how this affects regular people, prices, or jobs]
 
-4. Market Impact (50 words):
-[Describe the effects on markets and economy]
+        4. Market Impact:
+        [Describe the effects on markets and economy]
 
-5. Simple Explanation of Terms (50 words):
-[Define any complex financial terms used]
+        5. Simple Explanation of Terms:
+        [Define any complex financial terms used]
 
-6. Future Outlook (50 words):
-[Discuss what this means for the future]
+        6. Future Outlook:
+        [Discuss what this means for the future]
 
-Use simple, everyday language as if explaining to a friend with no financial background. Each section should be exactly 50 words to maintain consistency and readability."""
+        Use simple, everyday language as if explaining to a friend with no financial background. 
+        Each section should be exactly 50 words to maintain consistency and readability.
+        Add two line breaks after each section heading for better formatting."""
+
         response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}]
         )
-        return response.choices[0].message.content
+
+        # Get the summary and ensure proper line breaks
+        summary = response.choices[0].message.content
+
+        # Enhanced formatting processing:
+        # 1. Ensure consistent line breaks after headings
+        summary = re.sub(r'(\n\d+\. .+?:)', r'\1\n\n', summary)
+        # 2. Normalize all multiple newlines to two newlines
+        summary = re.sub(r'\n{2,}', '\n\n', summary)
+        # 3. Ensure no single newlines between paragraphs
+        summary = summary.replace('\n', ' ').replace('  ', '\n\n')
+
+        return summary
     except Exception as e:
         print(f"Error summarizing news: {e}")
         return article.get('description', '')
@@ -116,7 +131,7 @@ def home():
             timestamp = datetime.fromisoformat(article['publishedAt'].replace('Z', '+00:00')).strftime("%Y-%m-%d")
         except:
             timestamp = datetime.now().strftime("%Y-%m-%d")
-            
+
         news_items.append({
             'title': article['title'],
             'summary': summary,
@@ -175,7 +190,7 @@ def generate_budget():
 
     budget['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     session['budget'] = budget
-    
+
     # Prepare the context from user's budget if available
     budget_context = str(budget)
 
@@ -197,11 +212,11 @@ def generate_budget():
             messages=messages,
             response_format={"type": "json_object"}
         )
-        
+
         ai_response = response.choices[0].message.content
 
         print(ai_response)
-        
+
         return jsonify({'response': ai_response})
     except Exception as e:
         app.logger.error(f"An error occurred: {e}")
@@ -253,21 +268,21 @@ def generate_budget_pdf():
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.json.get('message', '')
-    
+
     if not user_message:
         return jsonify({'response': 'Please enter a message.'})
-    
+
     # Keep chat history in session
     if 'chat_history' not in session:
         session['chat_history'] = []
-    
+
     session['chat_history'].append({'role': 'user', 'content': user_message})
-    
+
     # Prepare the context from user's budget if available
     budget_context = ""
     if 'budget' in session:
         budget_context = session['budget']
-        
+
     try:
         # Prepare messages for OpenAI
         messages = [
@@ -280,17 +295,17 @@ def chat():
 "If someone asks for definitions, explain them in a way that a beginner would understand. Keep your answers concise but informative. If a concept is complex, break it down into smaller parts. Be supportive and encouraging, making learning about finance fun and approachable."},
             *[{"role": msg['role'], "content": msg['content']} for msg in session['chat_history']]
         ]
-        
+
         response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=messages
         )
-        
+
         assistant_message = response.choices[0].message.content
         session['chat_history'].append({'role': 'assistant', 'content': assistant_message})
-        
+
         return jsonify({'response': assistant_message})
-    
+
     except Exception as e:
         return jsonify({'response': f"Sorry, I encountered an error: {str(e)}"})
 
@@ -301,4 +316,3 @@ def clear_session():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
-
