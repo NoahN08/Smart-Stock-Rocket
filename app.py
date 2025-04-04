@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_file
 from flask_session import Session
 import openai
@@ -72,50 +73,35 @@ def get_financial_news():
 def summarize_news(article):
     try:
         prompt = f"""Summarize this financial news article in an easy-to-read format:
-        Title: {article['title']}
-        Content: {article['description']}
+Title: {article['title']}
+Content: {article['description']}
 
-        Please structure the summary in the following sections. Each section should be around 50 words:
+Please structure the summary in the following sections:
 
-        1. Main Event:
-        [Explain the key announcement or event in simple terms]
+1. Main Event (50 words):
+[Explain the key announcement or event in simple terms]
 
-        2. Key Players:
-        [Describe the main companies/people involved and their roles]
+2. Key Players (50 words):
+[Describe the main companies/people involved and their roles]
 
-        3. Impact on Daily Life:
-        [Explain how this affects regular people, prices, or jobs]
+3. Impact on Daily Life (50 words):
+[Explain how this affects regular people, prices, or jobs]
 
-        4. Market Impact:
-        [Describe the effects on markets and economy]
+4. Market Impact (50 words):
+[Describe the effects on markets and economy]
 
-        5. Simple Explanation of Terms:
-        [Define any complex financial terms used]
+5. Simple Explanation of Terms (50 words):
+[Define any complex financial terms used]
 
-        6. Future Outlook:
-        [Discuss what this means for the future]
+6. Future Outlook (50 words):
+[Discuss what this means for the future]
 
-        Use simple, everyday language as if explaining to a friend with no financial background. 
-        Each section should be exactly 50 words to maintain consistency and readability.
-        Add two line breaks after each section heading for better formatting."""
-
+Use simple, everyday language as if explaining to a friend with no financial background. Each section should be exactly 50 words to maintain consistency and readability."""
         response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}]
         )
-
-        # Get the summary and ensure proper line breaks
-        summary = response.choices[0].message.content
-
-        # Enhanced formatting processing:
-        # 1. Ensure consistent line breaks after headings
-        summary = re.sub(r'(\n\d+\. .+?:)', r'\1\n\n', summary)
-        # 2. Normalize all multiple newlines to two newlines
-        summary = re.sub(r'\n{2,}', '\n\n', summary)
-        # 3. Ensure no single newlines between paragraphs
-        summary = summary.replace('\n', ' ').replace('  ', '\n\n')
-
-        return summary
+        return response.choices[0].message.content
     except Exception as e:
         print(f"Error summarizing news: {e}")
         return article.get('description', '')
@@ -131,7 +117,7 @@ def home():
             timestamp = datetime.fromisoformat(article['publishedAt'].replace('Z', '+00:00')).strftime("%Y-%m-%d")
         except:
             timestamp = datetime.now().strftime("%Y-%m-%d")
-
+            
         news_items.append({
             'title': article['title'],
             'summary': summary,
@@ -190,7 +176,7 @@ def generate_budget():
 
     budget['timestamp'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     session['budget'] = budget
-
+    
     # Prepare the context from user's budget if available
     budget_context = str(budget)
 
@@ -212,11 +198,11 @@ def generate_budget():
             messages=messages,
             response_format={"type": "json_object"}
         )
-
+        
         ai_response = response.choices[0].message.content
 
         print(ai_response)
-
+        
         return jsonify({'response': ai_response})
     except Exception as e:
         app.logger.error(f"An error occurred: {e}")
@@ -268,44 +254,97 @@ def generate_budget_pdf():
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.json.get('message', '')
-
+    
     if not user_message:
         return jsonify({'response': 'Please enter a message.'})
-
+    
     # Keep chat history in session
     if 'chat_history' not in session:
         session['chat_history'] = []
-
+    
     session['chat_history'].append({'role': 'user', 'content': user_message})
-
+    
     # Prepare the context from user's budget if available
     budget_context = ""
     if 'budget' in session:
         budget_context = session['budget']
-
+        
     try:
         # Prepare messages for OpenAI
         messages = [
-            {"role": "system", "content": f"""You are a helpful assistant for a financial app called Smart Saver. {budget_context}Provide concise financial advice and information. You are a friendly and knowledgeable financial assistant designed to help teens understand money management in a simple and engaging way. When explaining concepts, keep your language clear and easy to understand. If you provide steps, tips, or key points, list them out like this:
+            {"role": "system", "content": f"""You are Smart Saver's AI Financial Advisor, a specialized assistant for our financial education app. {budget_context}
 
-1. First step or key point
-2. Second step or key point
-3. Third step or key point"""
+Your core traits:
+• Friendly and approachable, like a knowledgeable friend
+• Patient with financial beginners
+• Expert in explaining complex topics simply
+• Focused on practical, actionable advice
+• Encouraging and positive in tone
 
-"If someone asks for definitions, explain them in a way that a beginner would understand. Keep your answers concise but informative. If a concept is complex, break it down into smaller parts. Be supportive and encouraging, making learning about finance fun and approachable."},
+When providing information:
+
+1. For Step-by-Step Instructions:
+   • Use clear numbering
+   • Keep each step concise
+   • Add brief explanations when needed
+   • Example:
+     1. First, check your total income
+     2. Then, list all monthly expenses
+     3. Finally, subtract expenses from income
+
+2. For Lists and Tips:
+   ┌────────────────────┐
+   │ Category Header    │
+   ├────────────────────┤
+   │ • First point      │
+   │ • Second point     │
+   │ • Third point      │
+   └────────────────────┘
+
+3. For Definitions:
+   Term: [Simple definition]
+   Example: [Real-world example]
+   Why it matters: [Practical importance]
+
+4. For Complex Topics:
+   🔑 Key Concept:
+   ├─ Basic Explanation
+   ├─ Simple Example
+   └─ Practical Application
+
+Always remember to:
+• Break down complex terms into simple language
+• Use relevant examples for teenagers
+• Provide practical, actionable advice
+• Stay positive and encouraging
+• Focus on building good financial habits
+
+If providing financial calculations or comparisons, present them in a clear, organized format:
+
+Example Format:
+━━━━━━━━━━━━━━━━━━
+Income:     $1,000
+Expenses:   -$700
+━━━━━━━━━━━━━━━━━━
+Savings:    $300
+━━━━━━━━━━━━━━━━━━
+
+Your goal is to make financial education accessible, engaging, and practical for young people learning about money management."""},
             *[{"role": msg['role'], "content": msg['content']} for msg in session['chat_history']]
         ]
-
+        
         response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=messages
         )
-
+        
         assistant_message = response.choices[0].message.content
+        # Convert markdown to HTML
+        html_message = markdown.markdown(assistant_message)
         session['chat_history'].append({'role': 'assistant', 'content': assistant_message})
-
-        return jsonify({'response': assistant_message})
-
+        
+        return jsonify({'response': html_message})
+    
     except Exception as e:
         return jsonify({'response': f"Sorry, I encountered an error: {str(e)}"})
 
@@ -316,3 +355,4 @@ def clear_session():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
+
