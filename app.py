@@ -11,6 +11,7 @@ import markdown
 import tempfile
 from weasyprint import HTML
 import re  # Added for regex processing
+import pandas as pd
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)
@@ -249,6 +250,70 @@ def generate_budget_pdf():
 
     #Clean up the temp file
     os.unlink(temp_file.name)
+
+
+ALLOWED_EXTENSIONS = {'pdf', 'csv', 'txt'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def analyze_bank_statement(file_path, file_extension):
+    try:
+        if file_extension == 'csv':
+            df = pd.read_csv(file_path)
+            # Create a string representation of the relevant data for the LLM prompt
+            statement_content = df.to_string()
+        elif file_extension == 'txt':
+            with open(file_path, 'r') as f:
+                statement_content = f.read()
+        elif file_extension == 'pdf':
+            # You'll need a PDF parsing library like PyPDF2 or pdfplumber
+            import pdfplumber
+            statement_content = ""
+            with pdfplumber.open(file_path) as pdf:
+                for page in pdf.pages:
+                    statement_content += page.extract_text() + "\n"
+        else:
+            return "Unsupported file format."
+
+
+        with open('topic_prompts/bank_statement_prompt.txt', 'r') as file:
+            bank_statement_prompt = file.read()
+
+        messages = [
+            {"role": "system", "content": bank_statement_prompt},
+            {"role": "system", "content": statement_content}
+        ]
+
+        response = openai_client.chat.completions.create(
+            model="gpt-3.5-turbo",  # Or your preferred model
+            messages=messages,
+            response_format={"type": "json_object"},
+        )
+
+        try:
+            return response.choices[0].message.content
+        except Exception as e:
+            return f"Error parsing LLM response: {e}"
+
+    except Exception as e:
+        return f"Error reading or processing file: {e}"
+
+@app.route('/analyze_statement', methods=['POST'])
+def analyze_statement_upload():
+    if 'bankStatement' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    file = request.files['bankStatement']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+    if file and allowed_file(file.filename):
+        file_extension = file.filename.rsplit('.', 1)[1].lower()  # Extract extension
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            file.save(temp_file.name)
+            llm_response = analyze_bank_statement(temp_file.name, file_extension)
+            os.unlink(temp_file.name) # Clean up temp file
+            return jsonify(llm_response)
+    return jsonify({'error': 'Invalid file type'}), 400
 
 # Chat route - handles the conversation with the LLM
 @app.route('/chat', methods=['POST'])

@@ -70,7 +70,7 @@ function addEntry(columnId) {
     newEntry.classList.add("entry-row");
     newEntry.innerHTML = `
         <input type="text" class="descriptor" placeholder="${inputPlaceholders[columnId]}">
-        <input type="number" class="value" placeholder="Amount Per Month">
+        <input type="number" min="0" step="any" class="value" placeholder="Amount Per Month">
         <button type="button" class="delete-entry-row"> &#x2715; </button>
     `;
 
@@ -222,3 +222,67 @@ downloadButton.addEventListener('click', function() {
         downloadButton.disabled = false; // re-enable button.
     });
 });
+
+const bankStatementUpload = document.getElementById('bankStatementUpload');
+const uploadStatementButton = document.getElementById('uploadStatementButton');
+const uploadStatus = document.getElementById('uploadStatus');
+const budgetContainer = document.getElementById('budget-container');
+const loadingOverlay = document.getElementById('loading-overlay');
+
+uploadStatementButton.addEventListener('click', () => {
+    const file = bankStatementUpload.files[0];
+    if (file) {
+        loadingOverlay.style.display = 'flex'; // Show loading
+
+        const formData = new FormData();
+        formData.append('bankStatement', file);
+
+        fetch('/analyze_statement', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(llmResponse => {
+            loadingOverlay.style.display = 'none'; // Hide loading
+            // Process the LLM response to display the budget summary
+            displayBudget(llmResponse);
+            downloadButton.style.display = 'block'; // Show download button
+            // Store the LLM response for PDF generation if needed later
+            window.llmResponse = llmResponse;
+        })
+        .catch(error => {
+            console.error('Error analyzing statement:', error);
+            uploadStatus.textContent = 'Error during analysis.';
+            loadingOverlay.style.display = 'none'; // Hide loading
+        });
+    } else {
+        uploadStatus.textContent = 'Please select a file.';
+    }
+});
+
+function displayBudgetSummary(llmResponse) {
+    budgetContainer.innerHTML = ''; // Clear previous summary (Changed ID)
+    llmResponse = JSON.parse(llmResponse);
+    const tableData = llmResponse.Table;
+    const comments = llmResponse.Comments.replace(/\n/g, '<br>');
+
+    // Create and append the table (as before)
+    const table = document.createElement('table');
+    const headerRow = table.insertRow();
+    for (const key in tableData) {
+        const headerCell = headerRow.insertCell();
+        headerCell.textContent = key;
+    }
+    const dataRow = table.insertRow();
+    for (const key in tableData) {
+        const dataCell = dataRow.insertCell();
+        dataCell.textContent = tableData[key];
+    }
+    budgetContainer.appendChild(table); // Changed ID
+    const commentsDiv = document.createElement('div');
+    commentsDiv.innerHTML = comments;
+    budgetContainer.appendChild(commentsDiv); // Changed ID
+}
+
+// Hide the download button initially
+downloadButton.style.display = 'none';

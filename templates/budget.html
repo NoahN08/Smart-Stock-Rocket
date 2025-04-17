@@ -10,6 +10,7 @@
 {% block content %}
     <section class="budget-section">
         <h2>Your Budget Overview</h2>
+        <h3>Option 1: Input Finances</h3>
         <form id="budget-form">
             <div class="input-column" id="income-column">
                 <h3>Income</h3>
@@ -39,16 +40,17 @@
             <p>Generating Budget Report...</p>
         </div>
 
+        <div>
+            <h3>Option 2: Upload Bank Statement</h3>
+            <input type="file" id="bankStatementUpload" accept=".pdf,.csv,.txt">
+            <button id="uploadStatementButton">Analyze Statement</button>
+            <div id="uploadStatus"></div>
+        </div>
+
         <div class="display" id="budget-container"> </div>
         
         <button id="download-pdf-button" style="display: none;">Download Detailed PDF Report</button>
     </section>
-    <!-- <section class="budget-section">
-        <h2>Personalized Financial Report</h2>
-        <form action = "/budget" method = "post" enctype="multipart/form-data">   
-            <input type="file" name="file" />   
-            <input type = "submit" value="Upload">   
-        </form>
-    </section> -->
+
     <script src="{{ url_for('static', filename='budget.js') }}" defer></script>
 {% endblock %}
