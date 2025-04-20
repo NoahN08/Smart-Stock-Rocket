@@ -185,6 +185,123 @@ function displayBudget(budget_json) {
     budgetContainer.appendChild(heading);
     budgetContainer.appendChild(table);
     budgetContainer.appendChild(commentsDiv);
+
+    const chartContainer = document.createElement('div');
+    chartContainer.id = 'chart-container';
+    const incomeChartWrapper = document.createElement('div');
+    const expenseChartWrapper = document.createElement('div');
+    incomeChartWrapper.classList.add("chart-wrapper");
+    expenseChartWrapper.classList.add("chart-wrapper");
+
+    incomeChartCanvas = document.createElement('canvas');
+    expenseChartCanvas = document.createElement('canvas');
+    incomeChartCanvas.id = 'incomeChart';
+    expenseChartCanvas.id = 'expenseChart';
+
+    incomeChartWrapper.appendChild(incomeChartCanvas);
+    expenseChartWrapper.appendChild(expenseChartCanvas);
+    chartContainer.appendChild(incomeChartWrapper);
+    chartContainer.appendChild(expenseChartWrapper);
+
+    budgetContainer.appendChild(chartContainer);
+
+    // Generate Chart.js charts
+    generateIncomeChart(budget.ChartData.income_sources);
+    generateExpenseChart(budget.ChartData.expense_categories);
+}
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+function generateIncomeChart(incomeData) {
+    if (!incomeData || incomeData.length === 0) return; // Check for data
+
+    const incomeLabels = incomeData.map(item => item.source);
+    const incomeAmounts = incomeData.map(item => item.amount);
+
+    const incomeColors = [
+        '#3cb44b',
+        '#aaffc3',
+        '#fffac8',
+        '#ffe119',
+        '#ffd8b1',
+        '#fabebe',
+        '#e6beff',
+        '#4363d8',
+        '#46f0f0',
+        '#ffffff'
+    ];
+
+    new Chart(document.getElementById('incomeChart'), {
+        type: 'pie',
+        data: {
+            labels: incomeLabels,
+            datasets: [{
+                data: incomeAmounts,
+                backgroundColor: incomeColors
+            }]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Income Sources',
+                    font: {
+                        size: 24
+                    }
+                }
+            }
+        }
+    });
+}
+
+function generateExpenseChart(expenseData) {
+    if (!expenseData || expenseData.length === 0) return; // Check for data
+
+    const expenseLabels = expenseData.map(item => item.category);
+    const expenseAmounts = expenseData.map(item => item.amount);
+
+    const expenseColors = [
+        '#4363d8',  // Blue - Utilities, Consistent
+        '#46f0f0',  // Cyan - Transportation, Movement
+        '#911eb4',  // Purple - Entertainment, Discretionary
+        '#f58231',  // Orange - Food, Important (Moved)
+        '#008080',  // Teal - Debt, Obligations
+        '#e6194b',  // Red - Urgent, Important
+        '#9a6324',  // Brown - Housing, Stable (Moved)
+        '#f032e6',  // Magenta - Other, Miscellaneous
+        '#000075',  // Navy - Insurance, Planning
+        '#808080'   // Gray - Miscellaneous, Neutral
+    ];
+
+    new Chart(document.getElementById('expenseChart'), {
+        type: 'pie',
+        data: {
+            labels: expenseLabels,
+            datasets: [{
+                label: 'Expenses',
+                data: expenseAmounts,
+                backgroundColor: expenseColors
+            }]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Expense Categories',
+                    font: {
+                        size: 24
+                    }
+                }
+            }
+        }
+    });
 }
 
 const downloadButton = document.getElementById('download-pdf-button');
@@ -259,30 +376,6 @@ uploadStatementButton.addEventListener('click', () => {
         uploadStatus.textContent = 'Please select a file.';
     }
 });
-
-function displayBudgetSummary(llmResponse) {
-    budgetContainer.innerHTML = ''; // Clear previous summary (Changed ID)
-    llmResponse = JSON.parse(llmResponse);
-    const tableData = llmResponse.Table;
-    const comments = llmResponse.Comments.replace(/\n/g, '<br>');
-
-    // Create and append the table (as before)
-    const table = document.createElement('table');
-    const headerRow = table.insertRow();
-    for (const key in tableData) {
-        const headerCell = headerRow.insertCell();
-        headerCell.textContent = key;
-    }
-    const dataRow = table.insertRow();
-    for (const key in tableData) {
-        const dataCell = dataRow.insertCell();
-        dataCell.textContent = tableData[key];
-    }
-    budgetContainer.appendChild(table); // Changed ID
-    const commentsDiv = document.createElement('div');
-    commentsDiv.innerHTML = comments;
-    budgetContainer.appendChild(commentsDiv); // Changed ID
-}
 
 // Hide the download button initially
 downloadButton.style.display = 'none';
