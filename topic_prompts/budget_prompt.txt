@@ -22,16 +22,20 @@ Analyze this data and:
         * Positive reinforcement if the budget is well-managed. Use complete sentences and add line breaks (\n) for readability.
         * Avoid formatting this as a paragraph. Try to format it in a way that would be readable for the user. Try to separate ideas and sentences with line spaces because blocks of text are often daunting and make users lose interest.
 
-2.  **Generate a Detailed Analysis (Markdown Output):**
+2.  **Generate a Detailed Analysis (Markdown Output) - named "DetailedReportMarkdown" in JSON Output:**
+    * Create a Markdown formatted string, that includes:
+        * A detailed breakdown of all income sources, expenses, and savings goals, formatted in tables. Ensure that the table is properly formatted for markdown conversion to a PDF. Make sure that there are line breaks between the tables.
+        * A comprehensive analysis of the user's budget, identifying trends and patterns.
+        * Generate 2-3 "what-if" scenarios, such as the impact of increasing savings or reducing expenses.
+        * Provide in-depth, personalized recommendations based on the user's specific financial situation.
+
+3.  **Generate chart data to be used for generating an income pie chart (breaking down total income by income sources) and an expense pie chart (breaking down total expenses by expense type) - named "ChartData" in JSON Output**
     * Provide a detailed breakdown of income sources and amounts, expenses (categorized), and savings (if available) in a JSON format suitable for generating charts. Include the following:
         * `income_sources`: \[{"source": "Salary", "amount": 1000}, {"source": "Freelance", "amount": 500}, ...\]
         * `expense_categories`: \[{"category": "Rent", "amount": 600}, {"category": "Groceries", "amount": 200}, ...\]
-        * `savings_data`: \[{"date": "2024-01", "amount": 100}, {"date": "2024-02", "amount": 150}, ...\] (If available and relevant)
-    * Provide a comprehensive analysis of the user's budget as text, identifying trends and patterns.
-    * Generate 2-3 "what-if" scenarios as text.
-    * Provide in-depth, personalized recommendations as text.
+        * `savings_data`: \[{"date": "2024-01", "amount": 100}, {"date": "2024-02", "amount": 150}, ...\] (If available and relevant)=
 
-3. **Important Considerations:**
+4. **Important Considerations:**
     * Ensure that "Total Savings" does not exceed "Net Income". If it does, you should let the user know and provide suggestions on how to fix this.
     * Ensure that "Total Expenses" + "Total Savings" does not exceed "Net Income". This would be impossible for the user with their current habits as this would mean they would have to spend and save more than they were currently making. Therefore, if this happens, you should tell the user and provide suggestions on how to rectify it.
     * Inputs are savings goals. Keep in mind that the user is likely not already saving these amounts; these are their goals for the future.
@@ -56,8 +60,5 @@ Your response MUST be a JSON object containing:
     "income_sources":  [{"source": "Salary", "amount": 1000}, {"source": "Freelance", "amount": 500}],
     "expense_categories": [{"category": "Rent", "amount": 600}, {"category": "Groceries", "amount": 200}, ...],
     "savings_data":     [{"date": "2024-01", "amount": 100}, {"date": "2024-02", "amount": 150}, ...]
-  },
-  "AnalysisText": "Detailed analysis...",
-  "WhatIfScenarios": "What if scenarios...",
-  "Recommendations": "Recommendations..."
+  }
 }

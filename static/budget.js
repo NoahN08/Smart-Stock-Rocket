@@ -153,38 +153,7 @@ function displayBudget(budget_json) {
     // Create heading
     const heading = document.createElement("h3");
     heading.textContent = "Your Budget Report";
-
-    const tableData = budget.Table;
-    const comments = budget.Comments.replace(/\n/g, '<br>');
-
-    // Create the table
-    const table = document.createElement('table');
-
-    // Create the header row (keys)
-    const headerRow = table.insertRow();
-    for (const key in tableData) {
-        const headerCell = headerRow.insertCell();
-        headerCell.style.backgroundColor = "lightgray";
-        headerCell.textContent = key;
-    }
-
-    // Create the data row (values)
-    const dataRow = table.insertRow();
-    for (const key in tableData) {
-        const dataCell = dataRow.insertCell();
-        dataCell.textContent = tableData[key];
-    }
-
-    // Display the comments
-    const commentsDiv = document.createElement('div');
-    commentsDiv.innerHTML = comments;
-
-    const detailedReport = budget.DetailedReportMarkdown
-
-    // Append the table and comments to the page
     budgetContainer.appendChild(heading);
-    budgetContainer.appendChild(table);
-    budgetContainer.appendChild(commentsDiv);
 
     const chartContainer = document.createElement('div');
     chartContainer.id = 'chart-container';
@@ -208,15 +177,39 @@ function displayBudget(budget_json) {
     // Generate Chart.js charts
     generateIncomeChart(budget.ChartData.income_sources);
     generateExpenseChart(budget.ChartData.expense_categories);
-}
 
-function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
+    const tableData = budget.Table;
+    const comments = budget.Comments.replace(/\n/g, '<br>');
+    // Create the table
+    const table = document.createElement('table');
+
+    // Create the header row (keys)
+    const headerRow = table.insertRow();
+    for (const key in tableData) {
+        const headerCell = headerRow.insertCell();
+        headerCell.style.backgroundColor = "lightgray";
+        headerCell.textContent = key;
     }
-    return color;
+
+    // Create the data row (values)
+    const dataRow = table.insertRow();
+    for (const key in tableData) {
+        const dataCell = dataRow.insertCell();
+        dataCell.textContent = tableData[key];
+    }
+
+    // Display the comments
+    const commentsHeading = document.createElement("h4");
+    commentsHeading.textContent = "Our Recommendations";
+    const commentsDiv = document.createElement('div');
+    commentsDiv.innerHTML = comments;
+
+    const detailedReport = budget.DetailedReportMarkdown
+
+    // Append the table and comments to the page
+    budgetContainer.appendChild(table);
+    budgetContainer.append(commentsHeading)
+    budgetContainer.appendChild(commentsDiv);
 }
 
 function generateIncomeChart(incomeData) {
