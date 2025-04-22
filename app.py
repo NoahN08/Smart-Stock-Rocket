@@ -73,7 +73,7 @@ def get_financial_news():
 
 def summarize_news(article):
     try:
-        prompt = f"""Summarize this financial news article in an easy-to-read format:
+        prompt = f"""Summarize this financial news article in an easy-to-read format. When naming these articles, be sure to exclude the use of the word "Trump" or any other controversial political figure:
 Title: {article['title']}
 Content: {article['description']}
 
