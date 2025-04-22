@@ -23,6 +23,10 @@ budgetForm.addEventListener("submit", function(event) {
       savings: collectColumnData("savings-column")
     };
 
+    sessionStorage.setItem("income-column", JSON.stringify(budgetData.income))
+    sessionStorage.setItem("expenses-column", JSON.stringify(budgetData.expenses))
+    sessionStorage.setItem("savings-column", JSON.stringify(budgetData.savings))
+
     sendBudgetInfo(budgetData);
 });
 
@@ -44,8 +48,17 @@ function setupColumn(columnId) {
         }
     });
 
-    // Add first entry-row in column
-    addEntry(columnId)
+    const columnData = JSON.parse(sessionStorage.getItem(columnId))
+    if (columnData != null) {
+        columnData.forEach(entry => {
+            addEntry(columnId, entry.descriptor, entry.value)
+        })
+    } else {
+        // Add first entry-row in column
+        addEntry(columnId)
+    }
+
+    calculateTotal(columnId)
 }
 
 function collectColumnData(columnId) {
@@ -63,14 +76,14 @@ function collectColumnData(columnId) {
 }
 
 
-function addEntry(columnId) {
+function addEntry(columnId, defaultDesc="", defaultVal="") {
     const column = document.getElementById(columnId);
     const entriesContainer = column.querySelector(".entries");
     const newEntry = document.createElement("div");
     newEntry.classList.add("entry-row");
     newEntry.innerHTML = `
-        <input type="text" class="descriptor" placeholder="${inputPlaceholders[columnId]}">
-        <input type="number" min="0" step="any" class="value" placeholder="Amount Per Month">
+        <input type="text" class="descriptor" value="${defaultDesc}" placeholder="${inputPlaceholders[columnId]}">
+        <input type="number" min="0" step="any" class="value" value="${defaultVal}" placeholder="Amount Per Month">
         <button type="button" class="delete-entry-row"> &#x2715; </button>
     `;
 
